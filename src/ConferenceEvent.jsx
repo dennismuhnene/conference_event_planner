@@ -8,8 +8,10 @@ import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
-    const venueItems = useSelector((state) => state.venue);
+
     const avItems = useSelector((state) => state.av);
+    
+    const venueItems = useSelector((state) => state.venue);
     const dispatch = useDispatch(); 
     const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
 
@@ -31,10 +33,13 @@ const ConferenceEvent = () => {
           dispatch(decrementQuantity(index));
         }
       };
+
     const handleIncrementAvQuantity = (index) => {
+        dispatch(incrementAvQuantity(index));
     };
 
     const handleDecrementAvQuantity = (index) => {
+        dispatch(decrementAvQuantity(index));
     };
 
     const handleMealSelection = (index) => {
@@ -50,16 +55,24 @@ const ConferenceEvent = () => {
     const ItemsDisplay = ({ items }) => {
 
     };
+
     const calculateTotalCost = (section) => {
         let totalCost = 0;
         if (section === "venue") {
           venueItems.forEach((item) => {
             totalCost += item.cost * item.quantity;
           });
+        } else if (section === "av") {
+            avItems.forEach((item) => {
+                totalCost += item.cost * item.quantity;
+            });
         }
         return totalCost;
       };
+       
     const venueTotalCost = calculateTotalCost("venue");
+    const avTotalCost = calculateTotalCost("av");
+
 
     const navigateToProducts = (idType) => {
         if (idType == '#venue' || idType == '#addons' || idType == '#meals') {
@@ -176,7 +189,7 @@ const ConferenceEvent = () => {
                                     ))}
 
                                 </div>
-                                <div className="total_cost">Total Cost:</div>
+                                <div className="total_cost">Total Cost: {avTotalCost}</div>
 
                             </div>
 
